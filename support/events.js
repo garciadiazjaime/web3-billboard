@@ -5,7 +5,7 @@ export function subscribe(event, callback) {
     subscribers[event] = [];
   }
 
-  subscribers[event].push(callback);
+  subscribers[event][0] = callback;
 }
 
 export function publish(event, data) {

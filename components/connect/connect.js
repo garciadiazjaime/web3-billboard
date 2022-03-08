@@ -11,7 +11,11 @@ async function clickHandler() {
   })
 }
 
-export default function Connect() {
+export default function Connect({ address }) {
+  if (address) {
+    return null
+  }
+
   return (
     <button
       type="button"

@@ -1,0 +1,25 @@
+.billboard {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  word-break: break-word;
+  animation: pulse 17s infinite;
+  font-size: 128px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    background-color: white;
+    color: white;
+  }
+  50% {
+    background-color: rgb(1, 148, 158);
+    color: rgb(1, 148, 158);;
+  }
+}
