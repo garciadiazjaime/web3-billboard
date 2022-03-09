@@ -76,15 +76,10 @@ export default function Home() {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      {
-        isOnWeb3 &&
-        <div>
           <Alert message={status} />
-          <Connect address={walletAddress} />
-          <Wallet address={walletAddress} section="homepage" />
-          <Billboard message={message} />
-        </div>
-      }
+          {isOnWeb3 && <Connect address={walletAddress} />}
+          {isOnWeb3 && <Wallet address={walletAddress} section="homepage" />}
+          {isOnWeb3 && <Billboard message={message} />}
     </main>
   )
 }
