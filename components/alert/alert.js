@@ -6,6 +6,6 @@ export default function Alert({ message }) {
   }
 
   return (
-    <div className={styles.alert}>{message}</div>
+    <div className={styles.alert} dangerouslySetInnerHTML={{__html:message}}/>
   )
 }

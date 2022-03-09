@@ -5,52 +5,45 @@ import styles from '../styles/Home.module.css'
 import Alert from '../components/alert/alert'
 import Connect from '../components/connect/connect'
 import Wallet from '../components/wallet/wallet'
-import { helloWorldContract, updateMessage, getCurrentWalletConnected, loadCurrentMessage } from '../support/interact'
+import Message from '../components/message/message'
+import { isWeb3Enable, getCurrentWalletConnected } from '../support/interact'
 import { subscribe } from '../support/events'
 
 export default function Home() {
   const [ walletAddress, setWallet ] = useState('');
   const [ status, setStatus ] = useState('');
-  const [message, setMessage] = useState('');
-  const [newMessage, setNewMessage] = useState("");
+  const [ isOnWeb3, setIsOnWeb3 ] = useState();
 
-  useEffect(async () => {
-    async function fetchMessage() {
-      const message = await loadCurrentMessage();
-      setMessage(message);
+  async function fetchWallet() {
+    const { address, status } = await getCurrentWalletConnected();
+
+    setWallet(address)
+    setStatus(status); 
+  }
+
+  useEffect(() => {
+    const { status } = isWeb3Enable()
+
+    if (status) {
+      setStatus(status);
+      return null
     }
-    await fetchMessage();
-    addSmartContractListener();
 
-    async function fetchWallet() {
-      const { address, status } = await getCurrentWalletConnected();
+    setIsOnWeb3(true)
 
-      setWallet(address)
-      setStatus(status); 
-    }
-
-    subscribe('wallet_connected', ({ address, status }) => {
+    subscribe('event_update', ({ address, status }) => {
       setWallet(address)
       setStatus(status)
     })
 
-    await fetchWallet();
-    await addWalletListener();
+    fetchWallet();
+
+    addWalletListener();
   }, [])
 
-  function addSmartContractListener() {
-    helloWorldContract.events.UpdatedMessages({}, (error, data) => {
-      if (error) {
-        setStatus(`😥 ${error.message}`);
-      } else {
-        setMessage(data.returnValues[1]);
-      }
-    });
-  }
 
   function addWalletListener() {
     window.ethereum.on("accountsChanged", (accounts) => {
-      console.log('accountsChanged', accounts)
       if (accounts.length > 0) {
         setWallet(accounts[0]);
         setStatus("👆🏽 Write a message in the text-field above.");
@@ -61,33 +54,20 @@ export default function Home() {
     });
   }
 
-  const onUpdatePressed = async () => {
-    console.log({newMessage})
-    const { status } = await updateMessage(walletAddress, newMessage);
-    setStatus(status);
-    setNewMessage('')
-  };
-
   return (
-    <div className={styles.container}>
-      <Alert message={status} />
-      <Connect />
-      <Wallet address={walletAddress} />
-      <h2 style={{ paddingTop: "50px" }}>Current Message:</h2>
-      <p>{message}</p>
-
-      <div>
-        <input
-          type="text"
-          placeholder="Update the message in your smart contract."
-          onChange={(e) => setNewMessage(e.target.value)}
-          value={newMessage}
-        />
-
-        <button id="publish" onClick={onUpdatePressed}>
-          Update
-        </button>
-      </div>
-    </div>
+    <main className={styles.container}>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
+      {
+        isOnWeb3 &&
+        <div>
+          <Wallet address={walletAddress} hideUpdate />
+          <Connect address={walletAddress} />
+          <Alert message={status} />
+          <Message address={walletAddress} />
+        </div>
+      }
+    </main>
   )
 }

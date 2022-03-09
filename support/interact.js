@@ -1,15 +1,25 @@
 import { createAlchemyWeb3 } from '@alch/alchemy-web3';
 
-const alchemyKey = process.env.REACT_APP_ALCHEMY_KEY
+const alchemyKey = process.env.ALCHEMY_KEY
 const web3 = createAlchemyWeb3(alchemyKey); 
 
 import contractABI from './contract-abi.json';
-const contractAddress = process.env.CONTRACT_ADDRESS
+const contractAddress = "0xEAAa83Afa5a67f8b82614dDB8A3260a84729e218";
 
 export const helloWorldContract = new web3.eth.Contract(
   contractABI,
   contractAddress
 );
+
+export const isWeb3Enable = () => {
+  if (!window.ethereum) {
+    return {
+      status: 'You must install <a href="https://metamask.io/" target="_blank">Metamask</a> 🦊, a virtual Ethereum wallet in your browser.'
+    }
+  }
+
+  return {}
+}
 
 export const getCurrentWalletConnected = async () => {
   if (window.ethereum) {
@@ -17,7 +27,6 @@ export const getCurrentWalletConnected = async () => {
       const addressArray = await window.ethereum.request({
         method: "eth_accounts",
       });
-      console.log('addressArray', addressArray)
 
       if (addressArray.length > 0) {
         return {
@@ -26,7 +35,7 @@ export const getCurrentWalletConnected = async () => {
       }
 
       return {
-        status: '🦊 Connect to Metamask using the <connect> button.'
+        status: '🦊 Connect to Metamask'
       }
     } catch (err) {
       return {
@@ -65,7 +74,7 @@ export const loadCurrentMessage = async () => {
 export const updateMessage = async (address, message) => {
   if (message.trim() === "") {
     return {
-      status: "❌ Your message cannot be an empty string.",
+      status: "❌ Try a few more letters 🙃.",
     };
   }
 
@@ -84,7 +93,15 @@ export const updateMessage = async (address, message) => {
     });
 
     return {
-      status: `https://ropsten.etherscan.io/tx/${txHash}`
+      status: `
+        Awesome 😀
+        <br />
+        go back to to the homepage
+        <br />
+        sooner or later you will see your message.
+        <br /><br />
+        Here your <a href="https://ropsten.etherscan.io/tx/${txHash}" target="_blank">transaction</a> 🤓.
+        `
     };
   } catch (error) {
     return {

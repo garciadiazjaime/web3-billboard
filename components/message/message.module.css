@@ -1,0 +1,36 @@
+.message {
+  position: relative;
+  color: #4E9CAF;
+  margin-top: 48px;
+}
+
+.message input {
+  display: block;
+  padding: 20px 80px;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  line-height: 25px;
+  width: 100%;
+  color: black;
+  font-size: 2em;
+}
+
+.message a {
+  display: block;
+  padding: 20px 80px;
+  background: #4E9CAF;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  line-height: 25px;
+  font-size: 1.5em;
+}
+
+.message a:hover {
+  cursor: pointer;
+}

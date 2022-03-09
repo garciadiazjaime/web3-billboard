@@ -1,6 +1,17 @@
 .wallet {
-  position: absolute;
-  top: 0;
-  right: 0;
+  text-align: right;
+  width: 100%;
   z-index: 1;
+  position: relative;
+}
+
+.wallet a {
+ color: #4E9CAF;
+ display: inline-block;
+ width: 100%;
+}
+
+.wallet a:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }

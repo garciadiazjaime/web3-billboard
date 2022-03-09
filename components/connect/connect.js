@@ -1,11 +1,14 @@
+import styles from './connect.module.css'
+
 import { connectWallet } from '../../support/interact'
 import { publish } from '../../support/events'
 
-async function clickHandler() {
+async function clickHandler(event) {
+  event.preventDefault()
 
   const { address, status } = await connectWallet();
 
-  publish('wallet_connected', {
+  publish('event_update', {
     address,
     status,
   })
@@ -17,9 +20,10 @@ export default function Connect({ address }) {
   }
 
   return (
-    <button
+    <a
+      className={styles.connect}
       type="button"
       onClick={clickHandler}
-      >Connect</button>
+      >Connect</a>
   )
 }

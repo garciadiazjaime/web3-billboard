@@ -6,13 +6,14 @@ import Alert from '../components/alert/alert'
 import Connect from '../components/connect/connect'
 import Wallet from '../components/wallet/wallet'
 import Billboard from '../components/billboard/billboard'
-import { helloWorldContract, getCurrentWalletConnected, loadCurrentMessage } from '../support/interact'
+import { isWeb3Enable, helloWorldContract, getCurrentWalletConnected, loadCurrentMessage } from '../support/interact'
 import { subscribe } from '../support/events'
 
 export default function Home() {
   const [ walletAddress, setWallet ] = useState('');
   const [ status, setStatus ] = useState('');
-  const [message, setMessage] = useState('');
+  const [ message, setMessage ] = useState('');
+  const [ isOnWeb3, setIsOnWeb3 ] = useState();
 
   async function fetchMessage() {
     const message = await loadCurrentMessage();
@@ -23,16 +24,24 @@ export default function Home() {
     const { address, status } = await getCurrentWalletConnected();
 
     setWallet(address)
-    setStatus(status); 
+    setStatus(status);
   }
 
-  subscribe('wallet_connected', ({ address, status }) => {
-    console.log('wallet_connected')
-    setWallet(address)
-    setStatus(status)
-  })
+  useEffect(() => {
+    const { status } = isWeb3Enable()
 
-  useEffect(() => { 
+    if (status) {
+      setStatus(status);
+      return null
+    }
+
+    setIsOnWeb3(true)
+
+    subscribe('event_update', ({ address, status }) => {
+      setWallet(address)
+      setStatus(status)
+    })
+
     fetchMessage();
     fetchWallet();
 
@@ -67,10 +76,15 @@ export default function Home() {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <Alert message={status} />
-      <Connect address={walletAddress} />
-      <Wallet address={walletAddress} />
-      <Billboard message={message} />
+      {
+        isOnWeb3 &&
+        <div>
+          <Alert message={status} />
+          <Connect address={walletAddress} />
+          <Wallet address={walletAddress} section="homepage" />
+          <Billboard message={message} />
+        </div>
+      }
     </main>
   )
 }
