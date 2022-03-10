@@ -14,7 +14,7 @@ export const helloWorldContract = new web3.eth.Contract(
 export const isWeb3Enable = () => {
   if (!window.ethereum) {
     return {
-      status: 'You must install <a href="https://metamask.io/" target="_blank">Metamask</a> 🦊, a virtual Ethereum wallet in your browser.'
+      status: 'Install <a href="https://metamask.io/" target="_blank">Metamask</a> 🦊 so you can update the message.'
     }
   }
 

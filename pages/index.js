@@ -8,6 +8,7 @@ import Wallet from '../components/wallet/wallet'
 import Billboard from '../components/billboard/billboard'
 import { isWeb3Enable, helloWorldContract, getCurrentWalletConnected, loadCurrentMessage } from '../support/interact'
 import { subscribe } from '../support/events'
+import { getMessage } from '../support/lambda'
 
 export default function Home() {
   const [ walletAddress, setWallet ] = useState('');
@@ -26,6 +27,16 @@ export default function Home() {
     setWallet(address)
     setStatus(status);
   }
+
+  useEffect(() => {
+    if (isOnWeb3) {
+      return null
+    }
+    
+    getMessage().then(message => {
+      setMessage(message)
+    })
+  })
 
   useEffect(() => {
     const { status } = isWeb3Enable()
@@ -79,7 +90,7 @@ export default function Home() {
           <Alert message={status} />
           {isOnWeb3 && <Connect address={walletAddress} />}
           {isOnWeb3 && <Wallet address={walletAddress} section="homepage" />}
-          {isOnWeb3 && <Billboard message={message} />}
+          <Billboard message={message} />
     </main>
   )
 }
