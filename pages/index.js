@@ -29,20 +29,15 @@ export default function Home() {
   }
 
   useEffect(() => {
-    if (isOnWeb3) {
-      return null
-    }
-    
-    getMessage().then(message => {
-      setMessage(message)
-    })
-  })
-
-  useEffect(() => {
     const { status } = isWeb3Enable()
 
     if (status) {
       setStatus(status);
+
+      getMessage().then(message => {
+        setMessage(message)
+      })
+
       return null
     }
 
